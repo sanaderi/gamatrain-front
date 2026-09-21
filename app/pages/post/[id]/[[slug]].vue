@@ -463,7 +463,10 @@ const typesetMathInSpecificContainer = async (containerRef) => {
     }
   }
 }
-onMounted(() => {
+onMounted(async () => {
+  // Diagrams saved without a viewBox would otherwise be cut off (see utils/svg.ts).
+  await nextTick()
+  ensureSvgViewBoxes(postContentRef.value?.$el)
   typesetMathInSpecificContainer(postContentRef)
 })
 </script>
