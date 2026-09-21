@@ -133,26 +133,6 @@ const SvgPreview = function (editor) {
         }
         svg.innerHTML = content
         domElement.replaceChildren(svg)
-
-        // A diagram with no viewBox is cut off (see utils/svg.ts). Once it is on screen, work the viewBox out, show
-        // the whole drawing, and store it so the saved HTML is complete too. It is not an undo step of its own.
-        if (!svg.hasAttribute('viewBox')) {
-          requestAnimationFrame(() => {
-            const viewBox = computeSvgViewBox(svg)
-            const root = modelElement.root
-            if (!viewBox || !root || root.rootName === '$graveyard') {
-              return
-            }
-            svg.setAttribute('viewBox', viewBox)
-            editor.model.enqueueChange({ isUndoable: false }, (modelWriter) => {
-              const current = modelElement.getAttribute('htmlCustomElementAttributes') || {}
-              modelWriter.setAttribute('htmlCustomElementAttributes', {
-                ...current,
-                attributes: { ...(current.attributes || {}), viewBox },
-              }, modelElement)
-            })
-          })
-        }
       })
     },
     converterPriority: 'high',
