@@ -106,14 +106,12 @@
                 md:close
               </v-icon>
 
-              <!-- Same filled marker the result's answer sheet uses for the correct option. -->
-              <v-icon
+              <!-- Same filled marker the result's answer sheet uses for the correct option. A plain CSS dot, not
+                   the md:circle glyph: the icon font drew it ~2px left of the box's center. -->
+              <span
                 v-else
-                color="success"
-                size="18"
-              >
-                md:circle
-              </v-icon>
+                class="correct-dot bg-success rounded-circle"
+              />
             </div>
             <div
               :class="[
@@ -465,6 +463,10 @@ const getQuestionQueryValue = (data: TestDetailsContent, field: string) => {
   max-width : 24px;
   max-height: 24px;
   font-size: 1.4rem;
+}
+.correct-dot {
+  width: 14px;
+  height: 14px;
 }
 .choice-text {
   min-width: 0;
