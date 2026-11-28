@@ -376,6 +376,7 @@ const items = computed(() => [
     subMenuList: [
       { title: 'Location', link: '/admin/Locations', icon: 'md:location_on_outlined' },
       { title: 'Paper types', link: '/admin/types', icon: 'md:category_outlined' },
+      { title: 'Curriculum (boards)', link: '/admin/curriculum', icon: 'md:account_tree_outlined' },
     ],
   },
   {

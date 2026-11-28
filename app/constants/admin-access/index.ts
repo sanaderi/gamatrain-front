@@ -67,6 +67,11 @@ export const ADMIN_PERMISSIONS = {
     remove: 'Admin.TopicMatches.RemoveMatch',
     suggest: 'Admin.TopicMatches.SuggestMatches',
   },
+  // The curriculum model: the boards list opens the screens, a board edit stands for the right to change them.
+  curriculum: {
+    list: 'Admin.Curriculum.GetBoards',
+    edit: 'Admin.Curriculum.UpdateBoard',
+  },
   types: {
     list: 'Admin.Types.GetItems',
     create: 'Admin.Types.CreateItem',
@@ -109,6 +114,7 @@ export const ADMIN_PAGE_ACCESS: { path: string, permissions: string[], landing?:
   { path: '/admin/posts', permissions: [ADMIN_PERMISSIONS.posts.list], landing: true },
   { path: '/admin/past-papers', permissions: [ADMIN_PERMISSIONS.pastPapers.list], landing: true },
   { path: '/admin/types', permissions: [ADMIN_PERMISSIONS.types.list], landing: true },
+  { path: '/admin/curriculum', permissions: [ADMIN_PERMISSIONS.curriculum.list], landing: true },
   { path: '/admin/tutorials/edit', permissions: [ADMIN_PERMISSIONS.tutorials.detail] },
   { path: '/admin/tutorials', permissions: [ADMIN_PERMISSIONS.tutorials.list], landing: true },
   { path: '/admin/exam-questions/edit', permissions: [ADMIN_PERMISSIONS.examQuestions.detail] },
