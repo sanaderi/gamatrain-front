@@ -98,6 +98,8 @@ export interface SearchResourceItem extends SearchMetadataFields {
 
 /** Fields of a /api/v1/search result that the result card renders. */
 export interface SearchCardItem extends SearchMetadataFields {
+  /** Why a linked item is in the list (the curriculum model's lists): own, gama or otherBoard. */
+  link_source?: 'own' | 'gama' | 'otherBoard'
   id: number | string
   title?: string | null
   title_url?: string | null

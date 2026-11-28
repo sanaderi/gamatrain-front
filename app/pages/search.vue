@@ -125,10 +125,12 @@ const {
   beforeReplaceResults: scrollToPageTop,
 })
 
-const { metadata, setAppliedFilterTitles } = useSearchMetadata({
+const { metadata, curriculumSeoReady, setAppliedFilterTitles } = useSearchMetadata({
   activeService,
   data,
 })
+// The backend's SEO texts, when its curriculum switch is on, belong in the server-rendered page.
+await curriculumSeoReady
 
 const changeFilter = async (query, titles) => {
   if (titles !== undefined) {

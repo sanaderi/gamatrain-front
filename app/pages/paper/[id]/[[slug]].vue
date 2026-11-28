@@ -325,6 +325,11 @@ const schema = computed(() => {
   })
 })
 
+// The paper's title and description from the backend's curriculum model (its code, session and files), once the backend's
+// switch says so; the ones below otherwise.
+const { seo: curriculumPaperSeo, ready: curriculumPaperSeoReady } = useCurriculumPaperSeo(() => route.params.id as string | undefined)
+await curriculumPaperSeoReady
+
 const setMetaData = () => {
   if (!contentData.value) return
 
@@ -359,6 +364,11 @@ const setMetaData = () => {
   else {
     pageTitle.value = baseTitle
     pageDescribe.value = `Download ${title} – ${base_title}, ${section_title} curriculum. Ideal for quick revision, practice, and exam prep.`
+  }
+
+  if (curriculumPaperSeo.value?.title) {
+    pageTitle.value = curriculumPaperSeo.value.title
+    pageDescribe.value = curriculumPaperSeo.value.description || pageDescribe.value
   }
 
   const ogImage = dto.thumb_pic

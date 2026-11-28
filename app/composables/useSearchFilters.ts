@@ -14,6 +14,9 @@ export const useSearchFilters = ({
   activeService,
 }: SearchServiceOptions) => {
   const route = useRoute()
+  // The board's panel from the curriculum model, once the backend's switch says so; today's lists otherwise.
+  const { filter: curriculumFilter } = useCurriculumPanel()
+  const curriculumOptions = (key: string) => curriculumFilter(key)?.options.map(t => ({ title: t.label, id: Number.isNaN(Number(t.value)) ? t.value : Number(t.value) })) ?? null
 
   const makeFilter = (overrides: Partial<FilterConfiguration> & Pick<FilterConfiguration, 'title' | 'queryKey'>): FilterConfiguration => ({
     selectedItem: null,
@@ -122,7 +125,7 @@ export const useSearchFilters = ({
       'year': () => makeFilter({
         title: 'Year',
         dependencies: [{ parent: index.service, targetKey: 'type', sourceKey: 'id' }],
-        staticList: Array.from({ length: 14 }, (_, index) => 2013 + index)
+        staticList: curriculumOptions('year') ?? Array.from({ length: 14 }, (_, index) => 2013 + index)
           .reverse()
           .map(year => ({ title: `${year}`, id: year })),
         queryKey: 'edu_year',
@@ -135,28 +138,38 @@ export const useSearchFilters = ({
         staticList: [],
         dependenciesForGetStaticData: [index.level],
         getStaticList: (id = route.query.base) => {
+          const fromModel = curriculumOptions('series')
+          if (fromModel?.length) return fromModel
           const levelId = id === 'reset' ? route.query.base : (id || route.query.base)
           const months = levelId ? SEARCH_MONTHS_BY_LEVEL[Number(levelId)] : undefined
           return months || ALL_SEARCH_MONTHS
         },
         queryKey: 'edu_month',
       }),
-      'paper': () => makeFilter({
-        title: 'Paper',
-        disabled: true,
-        api: '/api/v2/search/types',
-        extraApiParams: { type: 'test_type' },
-        dependencies: [{ parent: index.board, targetKey: 'section_id', sourceKey: 'code' }],
-        itemFilter: item => item.is_paper === true,
-        queryKey: 'test_type',
-        inlineOptions: true,
-        inlineAllowClear: true,
-        inlineItemsPerRow: filterState => getPaperOptionsPerRow(filterState[index.board]?.selectedItem?.code),
-        itemTitle: getPaperOptionTitle,
-      }),
+      'paper': () => curriculumOptions('paper')?.length
+        ? makeFilter({
+            title: curriculumFilter('paper')!.label,
+            staticList: curriculumOptions('paper')!,
+            queryKey: 'test_type',
+            inlineOptions: true,
+            inlineAllowClear: true,
+          })
+        : makeFilter({
+            title: 'Paper',
+            disabled: true,
+            api: '/api/v2/search/types',
+            extraApiParams: { type: 'test_type' },
+            dependencies: [{ parent: index.board, targetKey: 'section_id', sourceKey: 'code' }],
+            itemFilter: item => item.is_paper === true,
+            queryKey: 'test_type',
+            inlineOptions: true,
+            inlineAllowClear: true,
+            inlineItemsPerRow: filterState => getPaperOptionsPerRow(filterState[index.board]?.selectedItem?.code),
+            itemTitle: getPaperOptionTitle,
+          }),
       'variant': () => makeFilter({
         title: 'Variant',
-        staticList: PAPER_VARIANT_OPTIONS,
+        staticList: curriculumOptions('variant') ?? PAPER_VARIANT_OPTIONS,
         queryKey: 'variant',
         inlineOptions: true,
         inlineAllowClear: true,

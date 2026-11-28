@@ -111,6 +111,15 @@
 
       <div class="d-flex align-center flex-nowrap overflow-hidden ga-1 my-1">
         <v-chip
+          v-if="linkLabel"
+          label
+          variant="flat"
+          color="primary50"
+          class="card-tag text-primary px-2 flex-shrink-0"
+        >
+          {{ linkLabel }}
+        </v-chip>
+        <v-chip
           v-for="tag in subjectTags"
           :key="tag"
           label
@@ -180,6 +189,9 @@ const props = withDefaults(defineProps<{
 }>(), {
   information: () => ({ id: '' }),
 })
+
+// Why a linked item is in this board's list (the curriculum model's lists: from GAMA, or another board's same topic).
+const linkLabel = computed(() => CURRICULUM_LINK_LABELS[String(props.information.link_source ?? '')] ?? null)
 
 const route = useRoute()
 const { $stripHtmlTags } = useNuxtApp()

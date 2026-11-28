@@ -264,6 +264,9 @@ const { data: lessonTree } = await useAsyncData(
   `lessonTree-${route.params.id}`,
   async () => {
     if (!contentData.value?.lesson) return null
+    // From the curriculum model (units, chapters and linked GAMA tutorials) once the backend's switch says so.
+    const fromModel = await curriculumGet<LessonTreeDTO>(`tree/${contentData.value.lesson}`)
+    if (fromModel) return fromModel
     const response = await useApiService.get(
       `/api/v2/search/tutorials/lessonTree/${contentData.value?.lesson}`, undefined, { public: true, credentials: 'omit' },
     ) as ApiResult<LessonTreeDTO>
@@ -369,6 +372,17 @@ const schema = computed(() => {
   })
 })
 
+// The title and description from the backend's templates (GAMA's tutorials are titled by their own title) once its
+// curriculum switch says so; the ones below otherwise.
+const { seo: curriculumSeo, ready: curriculumSeoReady } = useCurriculumSeo(() => contentData.value
+  ? {
+      page: 'Tutorial',
+      section: contentData.value.section,
+      values: { board: contentData.value.section_title, qualification: contentData.value.base_title, title: contentData.value.title },
+    }
+  : null)
+await curriculumSeoReady
+
 const setMetaData = () => {
   if (!contentData.value) return
 
@@ -389,6 +403,11 @@ const setMetaData = () => {
   pageTitle.value = baseTitle
 
   pageDescribe.value = `Learn ${dto.title} with step-by-step explanations and examples from the ${dto.base_title} ${dto.section_title} curriculum.`
+
+  if (curriculumSeo.value?.title) {
+    pageTitle.value = curriculumSeo.value.title
+    pageDescribe.value = curriculumSeo.value.description || pageDescribe.value
+  }
 
   const ogImage
     = dto.lesson_pic

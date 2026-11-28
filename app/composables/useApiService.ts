@@ -121,11 +121,14 @@ const authHeader = (
   }
 }
 
-const get = <T = unknown>(
+const get = async <T = unknown>(
   request: string,
   params?: SearchParameters,
   opts?: UseFetchOptions,
 ): Promise<T> => {
+  // Levels, subjects and topics come from the curriculum model once the backend's switch says so (curriculumSearchTypes).
+  const fromModel = await curriculumSearchTypes(request, params)
+  if (fromModel) return fromModel as T
   return apiRequest<T>(request, { ...opts, method: 'GET', params: params })
 }
 

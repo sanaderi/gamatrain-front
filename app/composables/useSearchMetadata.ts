@@ -165,23 +165,45 @@ export const useSearchMetadata = ({
       ? descTemplate.dynamic
       : pageDescriptions[getLegacySearchType(route.query.type)] || pageDescriptions.test
 
-    return { title, description }
+    return { title, description, titles }
   })
+
+  // The backend's texts from the curriculum's templates once its switch says so; the ones above otherwise.
+  const { seo: curriculumSeo, ready: curriculumSeoReady } = useCurriculumSeo(() => {
+    const page = CURRICULUM_LIST_PAGES[activeService.value]
+    if (!page) return null
+    const t = metadata.value.titles
+    return {
+      page,
+      section: route.query.section ? String(route.query.section) : null,
+      values: {
+        board: t.boardTitle,
+        qualification: t.gradeTitle,
+        subject: t.subjectTitle,
+        classification: t.classificationTitle ?? undefined,
+        series: t.monthTitle,
+        year: t.yearTitle ? String(t.yearTitle) : undefined,
+      },
+    }
+  })
+  const shown = computed(() => curriculumSeo.value
+    ? { title: curriculumSeo.value.title ?? metadata.value.title, description: curriculumSeo.value.description ?? metadata.value.description }
+    : { title: metadata.value.title, description: metadata.value.description })
 
   const host = useRequestURL().host
   useHead(() => ({
-    title: metadata.value.title,
+    title: shown.value.title,
     link: [{ rel: 'canonical', href: canonicalSearchUrl(host, route.query) }],
     meta: [
       {
         hid: 'apple-mobile-web-app-title',
         name: 'apple-mobile-web-app-title',
-        content: metadata.value.title,
+        content: shown.value.title,
       },
       {
         hid: 'og:title',
         name: 'og:title',
-        content: metadata.value.title,
+        content: shown.value.title,
       },
       {
         hid: 'og:site_name',
@@ -191,18 +213,19 @@ export const useSearchMetadata = ({
       {
         hid: 'description',
         name: 'description',
-        content: metadata.value.description,
+        content: shown.value.description,
       },
       {
         hid: 'og:description',
         name: 'og:description',
-        content: metadata.value.description,
+        content: shown.value.description,
       },
     ],
   }))
 
   return {
-    metadata,
+    metadata: shown,
+    curriculumSeoReady,
     setAppliedFilterTitles,
   }
 }

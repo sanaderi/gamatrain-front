@@ -246,3 +246,51 @@ export interface CurriculumCopyIssueDTO {
   sourceId?: number | null
   message: string
 }
+
+/** A public answer of the curriculum model: the website uses `data` only when `native` is true (the backend's switch). */
+export interface CurriculumAnswer<T> {
+  native: boolean
+  data: T | null
+}
+
+export interface CurriculumPublicItemDTO {
+  id: number
+  legacyId?: number | null
+  slug?: string | null
+  name?: string | null
+  shortName?: string | null
+  code?: string | null
+  logo?: string | null
+  countryCode?: string | null
+  parentId?: number | null
+  isUnit: boolean
+  isMaster: boolean
+  isDefault: boolean
+  listOrder: number
+}
+
+export interface CurriculumPublicFilterDTO {
+  key: string
+  /** The search query key the filter sets (edu_month, test_type, variant...). */
+  param: string
+  label: string
+  style: 'Select' | 'Chips'
+  options: { value: string, label: string, count: number }[]
+}
+
+export interface CurriculumPublicSchoolDTO {
+  id: number
+  name?: string | null
+  cityId?: number | null
+  city?: string | null
+}
+
+export interface CurriculumLandingDTO {
+  board: CurriculumPublicItemDTO
+  level?: CurriculumPublicItemDTO | null
+  subject?: CurriculumPublicItemDTO | null
+  children: CurriculumPublicItemDTO[]
+  paperCount: number
+  seo?: CurriculumSeoResultDTO | null
+  schools: CurriculumPublicSchoolDTO[]
+}
