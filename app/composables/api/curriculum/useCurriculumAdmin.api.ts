@@ -4,7 +4,9 @@ import type {
   CurriculumBoardDetailDTO,
   CurriculumBoardFilterDTO,
   CurriculumBoardTabDTO,
+  CurriculumCheckDTO,
   CurriculumContentTab,
+  CurriculumCopyIssueDTO,
   CurriculumDocumentTypeDTO,
   CurriculumLinkKind,
   CurriculumLinkedTopicsDTO,
@@ -108,6 +110,9 @@ export const useCurriculumAdmin = () => {
     getSeoTemplates: (boardId?: number) => get<CurriculumSeoTemplateDTO[]>('seo-templates', boardId ? { boardId } : undefined),
     saveSeoTemplate: (item: CurriculumSeoTemplateDTO) => save('seo-templates', item),
     deleteSeoTemplate: (id: number) => remove('seo-templates', id),
+    startCopy: () => call(() => useApiService.post<ApiResult<boolean>>(`${BASE}/copy`, {}), 'The copy started; check again in a minute.'),
+    checkCopy: () => get<CurriculumCheckDTO>('copy/check'),
+    getCopyIssues: (kind?: string) => get<CurriculumCopyIssueDTO[]>('copy/issues', kind ? { kind } : undefined),
     previewSeo: (page: CurriculumSeoPage, values: Record<string, string>, boardId?: number) => call(() => useApiService.post<ApiResult<CurriculumSeoResultDTO>>(
       `${BASE}/seo-preview?page=${page}${boardId ? `&boardId=${boardId}` : ''}`, values)),
   }

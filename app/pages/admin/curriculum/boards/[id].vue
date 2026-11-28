@@ -412,6 +412,7 @@ const seriesColumns = computed<RowsEditorColumn[]>(() => [
   { key: 'name', title: 'Name', placeholder: 'May/June' },
   { key: 'code', title: 'Code', placeholder: 'M/J' },
   { key: 'fileCode', title: 'File letter', placeholder: 's' },
+  { key: 'seoName', title: 'In titles', placeholder: 'May June' },
   { key: 'months', title: 'Months', placeholder: '5,6' },
   { key: 'qualificationId', title: 'Only for level', type: 'select', items: qualificationItems.value, clearable: true },
   { key: 'isSupplementary', title: 'Resit', type: 'switch' },

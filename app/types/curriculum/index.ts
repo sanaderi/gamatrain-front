@@ -47,6 +47,7 @@ export interface CurriculumSeriesTypeDTO {
   name: string
   code?: string | null
   fileCode?: string | null
+  seoName?: string | null
   months?: string | null
   isSupplementary: boolean
   listOrder: number
@@ -216,4 +217,32 @@ export interface RowsEditorColumn {
   items?: { title: string, value: unknown }[]
   placeholder?: string
   clearable?: boolean
+}
+
+export interface CurriculumCheckRowDTO {
+  kind: string
+  source: number
+  copied: number
+  missing: number
+}
+
+export interface CurriculumCoverageDTO {
+  content: string
+  total: number
+  placed: number
+  unplaced: Record<string, number>
+}
+
+/** The count check of the copy (phase 2): every list's missing must be 0 before anything switches. */
+export interface CurriculumCheckDTO {
+  lists: CurriculumCheckRowDTO[]
+  content: CurriculumCoverageDTO[]
+  issues: number
+}
+
+export interface CurriculumCopyIssueDTO {
+  id: number
+  kind: string
+  sourceId?: number | null
+  message: string
 }

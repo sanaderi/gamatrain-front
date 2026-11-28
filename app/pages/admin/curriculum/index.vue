@@ -22,6 +22,9 @@
       <v-tab value="seo">
         Default SEO
       </v-tab>
+      <v-tab value="copy">
+        Copy &amp; check
+      </v-tab>
     </v-tabs>
 
     <v-window
@@ -71,6 +74,9 @@
       </v-window-item>
       <v-window-item value="seo">
         <admin-curriculum-seo-templates v-if="tab === 'seo'" />
+      </v-window-item>
+      <v-window-item value="copy">
+        <admin-curriculum-copy-check v-if="tab === 'copy'" />
       </v-window-item>
     </v-window>
   </div>

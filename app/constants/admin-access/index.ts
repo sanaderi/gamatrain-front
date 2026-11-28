@@ -71,6 +71,7 @@ export const ADMIN_PERMISSIONS = {
   curriculum: {
     list: 'Admin.Curriculum.GetBoards',
     edit: 'Admin.Curriculum.UpdateBoard',
+    copy: 'Admin.Curriculum.StartCopy',
   },
   types: {
     list: 'Admin.Types.GetItems',
